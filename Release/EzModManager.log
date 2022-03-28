@@ -1,7 +1,11 @@
 ﻿  EzModManager.cpp
+E:\nwm\c\EzModManager-main\EzModManager.cpp(62,28): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+E:\nwm\c\EzModManager-main\EzModManager.cpp(62,47): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+E:\nwm\c\EzModManager-main\EzModManager.cpp(66,12): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+E:\nwm\c\EzModManager-main\EzModManager.cpp(73,12): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
   Trwa generowanie kodu
-  1 of 1370 functions (<0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+  3 of 1402 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    33 functions had inline decision re-evaluated but remain unchanged
   Zakończono generowanie kodu
-  EzModManager.vcxproj -> E:\nwm\wtf code\EzModManagerRoR2\EzModManager\Release\EzModManager.exe
+  EzModManager.vcxproj -> E:\nwm\c\EzModManager-main\Release\EzModManager.exe

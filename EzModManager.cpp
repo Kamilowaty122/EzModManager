@@ -29,6 +29,8 @@ using namespace std;
 using json::JSON;
 //using json = nlohmann::json;
 
+int main();
+
 void drawLogo();
 void downloadDatabase();
 string removeDots(string& x)
@@ -42,6 +44,49 @@ string removeNumbers(string& x) // usuwa jeszcze "-" i "_"
 	auto it = std::remove_if(std::begin(x), std::end(x), [](char c) {return (c == '1') || (c == '2') || (c == '3') || (c == '4') || (c == '5') || (c == '6') || (c == '7') || (c == '8') || (c == '9') || (c == '0') || (c == '-') || (c == '_');});
 	x.erase(it, std::end(x));
 	return x;
+}
+int versionCompare(string v1, string v2)
+{
+	// 1 if v2 is smaller, 
+	// -1 if v1 is smaller
+	// 0 if equal
+
+
+	// vnum stores each numeric
+	// part of version
+	int vnum1 = 0;
+	int vnum2 = 0;
+
+	// loop until both string are
+	// processed
+	for (int i = 0, j = 0; (i < v1.length() || j < v2.length());)
+	{
+		// storing numeric part of
+		// version 1 in vnum1
+		while (i < v1.length() && v1[i] != '.') {
+			vnum1 = vnum1 * 10 + (v1[i] - '0');
+			i++;
+		}
+
+		// storing numeric part of
+		// version 2 in vnum2
+		while (j < v2.length() && v2[j] != '.') {
+			vnum2 = vnum2 * 10 + (v2[j] - '0');
+			j++;
+		}
+
+		if (vnum1 > vnum2)
+			return 1;
+		if (vnum2 > vnum1)
+			return -1;
+
+		// if equal, reset variables and
+		// go for next numeric part
+		vnum1 = vnum2 = 0;
+		i++;
+		j++;
+	}
+	return 0;
 }
 void downloadMod(string url, vector<string> &myvector);
 void installMods(string pluginPath);
@@ -171,11 +216,13 @@ int main()
 									string tempVersion = lmao["versions"][0]["version_number"].ToString();
 									string DatabaseVersion = removeDots(tempVersion);	// pobiera wersje moda z database i usuwa kropki
 
-									tempVersion = manifestJSON["version_number"].ToString();
-									string LocalVersion = removeDots(tempVersion);
+									string manifestVersion = manifestJSON["version_number"].ToString();
+									string LocalVersion = removeDots(manifestVersion);
 									//cout << manifestJSON["name"].ToString() << " wersja database: " << DatabaseVersion << "  Local version: " << LocalVersion << " URL: " << lmao["package_url"].ToString()<<endl;
 
-									if (stoi(DatabaseVersion) > stoi(LocalVersion)) //stoi(string) konwertuje stringa na inta | stod na double | stof na floata
+									int twojstary = versionCompare(tempVersion, manifestVersion);
+
+									if (twojstary == 1) //stoi(string) konwertuje stringa na inta | stod na double | stof na floata
 									{
 										//cout << manifestJSON["name"] << " jest outdated. Twoja wersja to: "<<LocalVersion<<" A najnowsza z database to: "<<DatabaseVersion <<endl;
 										downloadMod(lmao["versions"][0]["full_name"].ToString(),InstalledMods);
@@ -424,8 +471,9 @@ int main()
 		
 	}
 
-
-	
+	std::cout << "Press enter to exit...";
+	std::getchar();
+	std::getchar();
 }
 
 void drawLogo() // https://patorjk.com/software/taag  między słowami 4 spacje || doom(pewnie zmienie pozniej)
@@ -462,7 +510,7 @@ void downloadDatabase() // https://thunderstore.io/api/v1/package/
 	string myurl = "https://thunderstore.io/api/v1/package/";
 	//string mypath = R"("E:\nwm\wtf code\EzModManagerRoR2\EzModManagerBattleground\database.json")";
 	string mypath = "database.json";
-	string str = "curl -# " + myurl + " >> " + mypath;
+	string str = "curl -# -L " + myurl + " >> " + mypath;
 	
 	const char *command = str.c_str();
 	
@@ -485,7 +533,7 @@ void downloadMod(string modName, vector<string> &myvector) // modName = database
 
 	//if (modName.find("tristanmcpherson-R2API") || modName.find("bbepis-BepInExPack")) { return; }
 	string elobenc = "https://cdn.thunderstore.io/live/repository/packages/" + modName + ".zip";
-	string command = "curl -# " + elobenc + " -o temp/" + modName + ".zip";
+	string command = "curl -# -L " + elobenc + " -o temp/" + modName + ".zip";
 
 	if (find(myvector.begin(), myvector.end(), modName) == myvector.end()) // == myvector.end() oznacza że find() przeleciał przez cały wektor i nie znalazł modName
 	{
