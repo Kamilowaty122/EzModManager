@@ -212,6 +212,13 @@ int main()
 								if (superZabawa["description"].ToString() == manifestJSON["description"].ToString()) // sprawdza czy jakikolwiek opis wersji zgadza sie z tym zapisanym na kompie bo JA ***** NIEKTORE MODY MAJA TAKIE SAME NAZWY A SA INNE 
 								{
 									if (lmao["is_deprecated"].ToBool() == true) { break; } //sprawdza czy mod jest depracated | jezeli tak to skipuje sprawdzanie go
+									bool boolshit = false;
+									for (int categoryIndex = 0; categoryIndex < lmao["categories"].length(); categoryIndex++) {
+										if (lmao["categories"][categoryIndex].ToString() == "Modpacks") {
+											boolshit = true;
+										}
+									}
+									if (boolshit) { break; }
 									//cout << superZabawa << endl;
 									string tempVersion = lmao["versions"][0]["version_number"].ToString();
 									string DatabaseVersion = removeDots(tempVersion);	// pobiera wersje moda z database i usuwa kropki
