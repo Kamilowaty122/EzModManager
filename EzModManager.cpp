@@ -171,6 +171,7 @@ int main()
 	cout << "2. Install mods from link." << endl;
 	cout << "3. Install mods from modlist." << endl; 
 	cout << "4. Create modlist." << endl;
+	cout << "5. Download (not install) R2API and its modules." << endl;
 	cout << endl;
 	cin >> wybor;
 
@@ -414,6 +415,19 @@ int main()
 			ofs.close();
 			break;
 		}
+		case 5: 
+		{
+			for (auto& lmao : Database.ArrayRange()) // przechodzi przez każde value w JSON database | dostęp poprzez lmao["name"]...
+			{
+				if (lmao["full_name"].ToString() == "tristanmcpherson-R2API") {
+					downloadMod(lmao["versions"][0]["full_name"].ToString(), InstalledMods);
+					downloadDependencies(lmao["full_name"].ToString(), Database, InstalledMods);
+				}
+				
+			}
+			break;
+		}
+			
 		case 20: 
 		{
 			installMods(PathToPlugins);
