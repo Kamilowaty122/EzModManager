@@ -91,6 +91,7 @@ int versionCompare(string v1, string v2)
 void downloadMod(string url, vector<string> &myvector);
 void installMods(string pluginPath);
 void downloadDependencies(string modName, JSON database, vector<string> &TurboVector);
+void downloadDependenciesUpdated(string modName, JSON database, vector<string>& TurboVector);
 
 bool IWantToKillMySelfCuzTheresNoGoodZipLibForCPP = false; // controls whether use tar.exe (available since Windows 10 (1903) from build 17063 or later.) or shitty zip library i found :/
 														   // true = use shitty zip lib; 
@@ -421,7 +422,7 @@ int main()
 			{
 				if (lmao["full_name"].ToString() == "tristanmcpherson-R2API") {
 					downloadMod(lmao["versions"][0]["full_name"].ToString(), InstalledMods);
-					downloadDependencies(lmao["full_name"].ToString(), Database, InstalledMods);
+					downloadDependenciesUpdated(lmao["full_name"].ToString(), Database, InstalledMods);
 				}
 				
 			}
@@ -581,7 +582,7 @@ void downloadDependencies(string modName,JSON database,vector<string> &TurboVect
 				
 				if  ( //not every mod is normal :/
 					(j.ToString().find("bbepis-BepInExPack") != string::npos) || 
-					(j.ToString().find("tristanmcpherson-R2API") != string::npos) || 
+					(j.ToString().find("R2API") != string::npos) || 
 					(j.ToString().find("RiskofThunder-HookGenPatcher") != string::npos) 
 					)
 				{
@@ -592,6 +593,44 @@ void downloadDependencies(string modName,JSON database,vector<string> &TurboVect
 					downloadMod(j.ToString(), TurboVector);
 				}
 				
+			}
+		}
+	}
+}
+
+void downloadDependenciesUpdated(string modName, JSON database, vector<string>& TurboVector) //modname = full_name
+{
+	if (modName == "") { return; }
+	//if (modName.find("tristanmcpherson-R2API") || modName.find("bbepis-BepInExPack")) { return; }
+	//cout << "current mod: " << modName << endl;
+	for (auto& lmao : database.ArrayRange()) // przechodzi przez każde value w JSON database | dostęp poprzez lmao["name"]...
+	{
+		//cout << modName << "   " << lmao["full_name"].ToString() << endl;
+		if (modName == lmao["full_name"].ToString())
+		{
+			for (auto& j : lmao["versions"][0]["dependencies"].ArrayRange())
+			{
+
+				if ( //not every mod is normal :/
+					(j.ToString().find("bbepis-BepInExPack") != string::npos) ||
+					(j.ToString().find("R2API") != string::npos) ||
+					(j.ToString().find("RiskofThunder-HookGenPatcher") != string::npos)
+					)
+				{
+					//cout << "ten mod zostal skipniety: " << j.ToString() << endl;
+				}
+				else
+				{
+					for (auto& xd : database.ArrayRange()) 
+					{
+						if (j.ToString().find(xd["full_name"].ToString()) != string::npos)
+						{
+							downloadMod(xd["versions"][0]["full_name"].ToString(), TurboVector);
+						}
+					}
+
+				}
+
 			}
 		}
 	}
